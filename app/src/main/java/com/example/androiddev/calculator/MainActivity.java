@@ -1,5 +1,6 @@
 package com.example.androiddev.calculator;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -119,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         divisionButton.setOnClickListener(this);
         resultButton.setOnClickListener(this);
         resetButton.setOnClickListener(this);
-
+        display.setOnClickListener(this);
     }
 
     private void registerEngeneeringComponents() {
@@ -314,8 +315,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.resultButton:
                 inputFinished = true;
-
-                display.setText(calculator.calculate(getDisplayText()));
+                String expession = getDisplayText();
+                String result = calculator.calculate(getDisplayText());
+                history.add(expession + " = " + result);
+                display.setText(result);
+                break;
+            case R.id.display:
+                //inputFinished = true;
+                //Intent i = new Intent(this, HistoryActivity.class);
+                //i.putExtra("historyList", history);
+                //startActivity(i);
                 break;
             default:
                 break;
