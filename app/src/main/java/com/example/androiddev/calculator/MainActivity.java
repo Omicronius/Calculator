@@ -3,6 +3,7 @@ package com.example.androiddev.calculator;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -10,14 +11,17 @@ import android.widget.TextView;
 import com.example.androiddev.calculator.util.Calculator;
 import com.example.androiddev.calculator.util.Operations;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView display;
+    private TextView preResult;
     private String value1;
     private String value2;
     private Operations operation;
     private Calculator calculator;
+    private ArrayList<String> history;
     private boolean inputFinished;
 
     Button oneButton;
@@ -62,8 +66,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        registerSimpleComponents();
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            registerSimpleComponents();
+            setContentView(R.layout.activity_main);
+        } else {
+            setContentView(R.layout.activity_main_landscape);
+            registerSimpleComponents();
+            registerEngeneeringComponents();
+        }
     }
 
     private void registerSimpleComponents() {
@@ -90,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         display = (TextView) findViewById(R.id.display);
 
 
-
         display.setText("");
 
         oneButton.setOnClickListener(this);
@@ -114,12 +123,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void registerEngeneeringComponents() {
+        preResult = (TextView) findViewById(R.id.preResult);
+
         sqrtButton = (Button) findViewById(R.id.sqrtButton);
         xPow2Button = (Button) findViewById(R.id.xPow2Button);
         xPowYButton = (Button) findViewById(R.id.xPowYButton);
         dotButton = (Button) findViewById(R.id.dotButton);
-        leftBracket = (Button)findViewById(R.id.leftBracket);
-        rightBracket = (Button)findViewById(R.id.rightBracket);
+        leftBracket = (Button) findViewById(R.id.leftBracket);
+        rightBracket = (Button) findViewById(R.id.rightBracket);
         backspace = (Button) findViewById(R.id.backspace);
 
         sqrtButton.setOnClickListener(this);
@@ -133,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-
+        String preliminaryResult;
         switch (view.getId()) {
             case R.id.button_1:
                 if (inputFinished) {
@@ -220,12 +231,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     inputFinished = false;
                 }
                 //if (getDisplayText().indexOf(".") == -1) {
-                    if (getDisplayText().length() == 0) {
-                        display.append("0.");
-                    } else {
-                        display.append(".");
-                    }
-               // }
+                if (getDisplayText().length() == 0) {
+                    display.append("0.");
+                } else {
+                    display.append(".");
+                }
+                // }
                 break;
             case R.id.backspace:
                 if (getDisplayText().length() > 0) {
@@ -303,11 +314,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.resultButton:
                 inputFinished = true;
-                display.setText(calculator.calculate(getDisplayText().toString()));
+
+                display.setText(calculator.calculate(getDisplayText()));
                 break;
             default:
                 break;
         }
+        preliminaryResult = calculator.calculate(getDisplayText());
+        preliminaryResult = "Incorrect input".equals(preliminaryResult) ? "" : preliminaryResult;
+        preResult.setText(preliminaryResult);
     }
 
     private String getDisplayText() {
