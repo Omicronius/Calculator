@@ -2,11 +2,14 @@ package com.example.androiddev.calculator.util;
 
 import android.icu.math.BigDecimal;
 
+import com.example.androiddev.calculator.exception.DivideByZeroException;
+
 /**
  * Created by KonstantinKlimov on 25.05.2017.
  */
 
 public class Calculator {
+
     public String calculate(String argument, Operations operation) {
         BigDecimal value = new BigDecimal(argument);
         String result = "";
@@ -59,5 +62,17 @@ public class Calculator {
                 break;
         }
         return result;
+    }
+
+    public String calculate(String displayText) {
+        String response;
+        try {
+            response =  ArithmeticExpressionHandler.calculateExpression(displayText).toString();
+        } catch (ArithmeticException e) {
+            response = "Division by zero.";
+        } catch (Exception e) {
+            response = "Incorrect input";
+        }
+        return response;
     }
 }

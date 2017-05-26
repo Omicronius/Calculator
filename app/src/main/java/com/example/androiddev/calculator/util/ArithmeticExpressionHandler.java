@@ -3,7 +3,7 @@ package com.example.androiddev.calculator.util;
 import java.math.BigDecimal;
 import java.util.*;
 
-public class postfixConverter {
+public class ArithmeticExpressionHandler {
 
     public static final Map<String, Integer> MAIN_MATH_OPERATIONS;
 
@@ -113,6 +113,6 @@ public class postfixConverter {
         return stack.pop();
     }
 
-    private postfixConverter() {
+    private ArithmeticExpressionHandler() {
     }
 }

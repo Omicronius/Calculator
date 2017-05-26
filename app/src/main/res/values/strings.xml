@@ -25,5 +25,6 @@
     <string name="dot">.</string>
     <string name="leftBracket">(</string>
     <string name="rightBracket">)</string>
+    <string name="backspace"><![CDATA[<-]]></string>
 </resources>
 

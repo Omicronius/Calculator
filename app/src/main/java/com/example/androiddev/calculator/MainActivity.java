@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button resetButton;
     Button leftBracket;
     Button rightBracket;
+    Button backspace;
 
 
     @Override
@@ -119,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dotButton = (Button) findViewById(R.id.dotButton);
         leftBracket = (Button)findViewById(R.id.leftBracket);
         rightBracket = (Button)findViewById(R.id.rightBracket);
+        backspace = (Button) findViewById(R.id.backspace);
 
         sqrtButton.setOnClickListener(this);
         xPow2Button.setOnClickListener(this);
@@ -126,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dotButton.setOnClickListener(this);
         leftBracket.setOnClickListener(this);
         rightBracket.setOnClickListener(this);
+        backspace.setOnClickListener(this);
     }
 
     @Override
@@ -216,12 +219,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     display.setText("0.");
                     inputFinished = false;
                 }
-                if (getDisplayText().indexOf(".") == -1) {
+                //if (getDisplayText().indexOf(".") == -1) {
                     if (getDisplayText().length() == 0) {
                         display.append("0.");
                     } else {
                         display.append(".");
                     }
+               // }
+                break;
+            case R.id.backspace:
+                if (getDisplayText().length() > 0) {
+                    display.setText(getDisplayText().substring(0, getDisplayText().length() - 1));
+                    inputFinished = false;
                 }
                 break;
             case R.id.leftBracket:
@@ -244,24 +253,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 display.setText("");
                 break;
             case R.id.plusButton:
-                operation = Operations.ADD;
-                inputFinished = true;
-                value1 = getDisplayText();
+                if (inputFinished) {
+                    display.setText("+");
+                    inputFinished = false;
+                } else {
+                    display.append("+");
+                }
                 break;
             case R.id.minusButton:
-                operation = Operations.SUBTRACT;
-                inputFinished = true;
-                value1 = getDisplayText();
+                if (inputFinished) {
+                    display.setText("-");
+                    inputFinished = false;
+                } else {
+                    display.append("-");
+                }
                 break;
             case R.id.multiplicationButton:
-                operation = Operations.MULTIPLY;
-                inputFinished = true;
-                value1 = getDisplayText();
+                if (inputFinished) {
+                    display.setText("*");
+                    inputFinished = false;
+                } else {
+                    display.append("*");
+                }
                 break;
             case R.id.divisionButton:
-                operation = Operations.DIVIDE;
-                inputFinished = true;
-                value1 = getDisplayText();
+                if (inputFinished) {
+                    display.setText("/");
+                    inputFinished = false;
+                } else {
+                    display.append("/");
+                }
                 break;
             case R.id.sqrtButton:
                 operation = Operations.SQRT;
@@ -282,8 +303,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.resultButton:
                 inputFinished = true;
-                value2 = getDisplayText();
-                display.setText(calculator.calculate(value1, value2, operation));
+                display.setText(calculator.calculate(getDisplayText().toString()));
                 break;
             default:
                 break;
