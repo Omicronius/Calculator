@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button dotButton;
     Button resultButton;
     Button resetButton;
+    Button leftBracket;
+    Button rightBracket;
 
 
     @Override
@@ -86,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         resetButton = (Button) findViewById(R.id.resetButton);
         display = (TextView) findViewById(R.id.display);
 
+
+
         display.setText("");
 
         oneButton.setOnClickListener(this);
@@ -105,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         divisionButton.setOnClickListener(this);
         resultButton.setOnClickListener(this);
         resetButton.setOnClickListener(this);
+
     }
 
     private void registerEngeneeringComponents() {
@@ -112,11 +117,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         xPow2Button = (Button) findViewById(R.id.xPow2Button);
         xPowYButton = (Button) findViewById(R.id.xPowYButton);
         dotButton = (Button) findViewById(R.id.dotButton);
+        leftBracket = (Button)findViewById(R.id.leftBracket);
+        rightBracket = (Button)findViewById(R.id.rightBracket);
 
         sqrtButton.setOnClickListener(this);
         xPow2Button.setOnClickListener(this);
         xPowYButton.setOnClickListener(this);
         dotButton.setOnClickListener(this);
+        leftBracket.setOnClickListener(this);
+        rightBracket.setOnClickListener(this);
     }
 
     @Override
@@ -213,6 +222,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     } else {
                         display.append(".");
                     }
+                }
+                break;
+            case R.id.leftBracket:
+                if (inputFinished) {
+                    display.setText("(");
+                    inputFinished = false;
+                } else {
+                    display.append("(");
+                }
+                break;
+            case R.id.rightBracket:
+                if (inputFinished) {
+                    display.setText(")");
+                    inputFinished = false;
+                } else {
+                    display.append(")");
                 }
                 break;
             case R.id.resetButton:

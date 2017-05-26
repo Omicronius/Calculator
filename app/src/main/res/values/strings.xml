@@ -23,5 +23,7 @@
     <string name="powY">x^y</string>
     <string name="procent">%</string>
     <string name="dot">.</string>
+    <string name="leftBracket">(</string>
+    <string name="rightBracket">)</string>
 </resources>
 
