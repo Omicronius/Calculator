@@ -9,10 +9,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.androiddev.calculator.entity.HistoryItem;
 import com.example.androiddev.calculator.util.Calculator;
+import com.example.androiddev.calculator.util.HistoryKeeper;
 import com.example.androiddev.calculator.util.Operations;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -68,8 +71,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            registerSimpleComponents();
             setContentView(R.layout.activity_main);
+            registerSimpleComponents();
         } else {
             setContentView(R.layout.activity_main_landscape);
             registerSimpleComponents();
@@ -101,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         display = (TextView) findViewById(R.id.display);
 
 
-        display.setText("");
+        //display.setText("");
 
         oneButton.setOnClickListener(this);
         twoButton.setOnClickListener(this);
@@ -317,14 +320,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 inputFinished = true;
                 String expession = getDisplayText();
                 String result = calculator.calculate(getDisplayText());
-                history.add(expession + " = " + result);
+                HistoryKeeper.addHistoryItem(new HistoryItem(new Date(),expession, result));
                 display.setText(result);
                 break;
             case R.id.display:
-                //inputFinished = true;
-                //Intent i = new Intent(this, HistoryActivity.class);
-                //i.putExtra("historyList", history);
-                //startActivity(i);
+                inputFinished = true;
+                Intent i = new Intent(this, HistoryActivity.class);
+                startActivityForResult(i, 404);
                 break;
             default:
                 break;
