@@ -1,22 +1,23 @@
 package com.example.androiddev.calculator;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.androiddev.calculator.entity.HistoryItem;
+import com.example.androiddev.calculator.util.DBHelper;
 import com.example.androiddev.calculator.util.Calculator;
 import com.example.androiddev.calculator.util.HistoryKeeper;
 import com.example.androiddev.calculator.util.Operations;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView display;
@@ -25,8 +26,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String value2;
     private Operations operation;
     private Calculator calculator;
-    private ArrayList<String> history;
     private boolean inputFinished;
+
+    SQLiteOpenHelper dbHelper;
+
 
     Button oneButton;
     Button twoButton;
@@ -78,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             registerSimpleComponents();
             registerEngeneeringComponents();
         }
+        dbHelper = new DBHelper(this);
     }
 
     private void registerSimpleComponents() {
@@ -104,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         display = (TextView) findViewById(R.id.display);
 
 
-        //display.setText("");
+        display.setText("");
 
         oneButton.setOnClickListener(this);
         twoButton.setOnClickListener(this);
@@ -318,9 +322,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.resultButton:
                 inputFinished = true;
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                ContentValues cv = new ContentValues();
+                String date = new Date().toString();
                 String expession = getDisplayText();
                 String result = calculator.calculate(getDisplayText());
-                HistoryKeeper.addHistoryItem(new HistoryItem(new Date(),expession, result));
+                cv.put("date", date);
+                cv.put("expession", expession);
+                cv.put("result", result);
+                db.insert("calcHistory", null, cv);
+                dbHelper.close();
                 display.setText(result);
                 break;
             case R.id.display:
@@ -334,6 +345,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         preliminaryResult = calculator.calculate(getDisplayText());
         preliminaryResult = "Incorrect input".equals(preliminaryResult) ? "" : preliminaryResult;
         preResult.setText(preliminaryResult);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null) {
+            return;
+        }
+        String expression = data.getStringExtra("expression");
+        preResult.setText(String.valueOf(calculator.calculate(expression)));
+        display.setText(String.valueOf(expression));
     }
 
     private String getDisplayText() {
