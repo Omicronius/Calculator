@@ -26,5 +26,8 @@
     <string name="leftBracket">(</string>
     <string name="rightBracket">)</string>
     <string name="backspace"><![CDATA[<-]]></string>
+    <string name="confirm_delete">Delete the item?</string>
+    <string name="cancel">Cancel</string>
+    <string name="OK">Ok</string>
 </resources>
 

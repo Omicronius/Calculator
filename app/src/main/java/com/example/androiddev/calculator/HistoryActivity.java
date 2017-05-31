@@ -1,16 +1,22 @@
 package com.example.androiddev.calculator;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
 
 import com.example.androiddev.calculator.adapter.RecyclerViewAdapter;
 import com.example.androiddev.calculator.entity.HistoryItem;
 import com.example.androiddev.calculator.util.DBHelper;
 import com.example.androiddev.calculator.util.HistoryKeeper;
+import com.example.androiddev.calculator.util.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 
@@ -29,7 +35,7 @@ public class HistoryActivity extends AppCompatActivity {
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         historyView.setLayoutManager(manager);
         ArrayList<HistoryItem> history = new ArrayList<>();
-        DBHelper dbHelper = new DBHelper(historyView.getContext());
+        final DBHelper dbHelper = new DBHelper(historyView.getContext());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.query("calcHistory", null, null, null, null, null, null);
         if (c.moveToFirst()) {
@@ -43,7 +49,41 @@ public class HistoryActivity extends AppCompatActivity {
                 history.add(new HistoryItem(date, expression, result));
             } while (c.moveToNext());
         }
+        db.close();
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(history);
         historyView.setAdapter(adapter);
+        historyView.addOnItemTouchListener(new RecyclerItemClickListener(historyView.getContext(), historyView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                String expression = ((TextView) view.findViewById(R.id.expression_text_view)).getText().toString();
+                Intent intent = new Intent();
+                intent.putExtra("expression", expression);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+
+            @Override
+            public void onLongItemClick(final View view, final int position) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder
+                        .setMessage(R.string.confirm_delete)
+                        .setCancelable(false)
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
+                        .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                 SQLiteDatabase bd = dbHelper.getWritableDatabase();
+                                bd.delete("calcHistory", )
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        }));
     }
 }
