@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.androiddev.calculator.entity.HistoryItem;
@@ -30,8 +32,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean inputFinished;
 
     SQLiteOpenHelper dbHelper;
-
-
+    private RadioGroup notation;
+    private RadioButton notationButton;
     Button oneButton;
     Button twoButton;
     Button threeButton;
@@ -133,6 +135,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void registerEngeneeringComponents() {
         preResult = (TextView) findViewById(R.id.preResult);
+
+        notation = (RadioGroup) findViewById(R.id.notation);
+        notation.setOnClickListener(this);
 
         sqrtButton = (Button) findViewById(R.id.sqrtButton);
         xPow2Button = (Button) findViewById(R.id.xPow2Button);

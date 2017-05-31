@@ -37,7 +37,7 @@ public class HistoryActivity extends AppCompatActivity {
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         historyView.setLayoutManager(manager);
         final ArrayList<HistoryItem> history = new ArrayList<>();
-        final DBHelper dbHelper = new DBHelper(historyView.getContext());
+        dbHelper = new DBHelper(historyView.getContext());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor c = db.query("calcHistory", null, null, null, null, null, null);
         if (c.moveToFirst()) {
@@ -82,17 +82,11 @@ public class HistoryActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 String expression = ((TextView) view.findViewById(R.id.expression_text_view)).getText().toString();
-                                SQLiteDatabase db = dbHelper.getWritableDatabase();
                                 HistoryItem hi = history.get(position);
-                                //db.execSQL("delete from "+ "calcHistory");
-
-                                Log.i("debug", "id element for deleting =" + hi.getId());
-                                Log.i("debug", "position =" + position);
-
+                                dbHelper = new DBHelper(view.getContext());
+                                SQLiteDatabase db = dbHelper.getWritableDatabase();
                                 int id = db.delete("calcHistory", "id" + "=" + hi.getId(), null);
-                                Log.i("debug", "deleting .. id =" + id);
-
-                                db.close();
+                                history.remove(position);
                                 adapter.notifyItemRemoved(position);
                             }
                         });

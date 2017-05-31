@@ -29,5 +29,9 @@
     <string name="confirm_delete">Delete the item?</string>
     <string name="cancel">Cancel</string>
     <string name="OK">Ok</string>
+    <string name="Dec">Dec</string>
+    <string name="Oct">Oct</string>
+    <string name="Hex">Hex</string>
+    <string name="Bin">Bin</string>
 </resources>
 
