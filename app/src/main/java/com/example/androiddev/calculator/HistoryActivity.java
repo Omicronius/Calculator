@@ -37,11 +37,10 @@ public class HistoryActivity extends AppCompatActivity {
             int expressionColIndex = c.getColumnIndex("expression");
             int resultColIndex = c.getColumnIndex("result");
             do {
-                String date = c.getColumnName(dateColIndex);
-                String expression = c.getColumnName(expressionColIndex);
-                String result = c.getColumnName(resultColIndex);
-                HistoryItem hi = new HistoryItem(date, expression, result);
-                history.add(hi);
+                String date = c.getString(dateColIndex);
+                String expression = c.getString(expressionColIndex);
+                String result = c.getString(resultColIndex);
+                history.add(new HistoryItem(date, expression, result));
             } while (c.moveToNext());
         }
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(history);
